@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white font-sans text-navy-600 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-tight text-navy-950;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    @apply bg-champagne-300 text-navy-950;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-champagne-500 ring-offset-2 ring-offset-white;
+  }
+}
+
+@layer components {
+  /* Small uppercase section label with the champagne accent */
+  .label {
+    @apply text-[11px] font-semibold uppercase text-champagne-600;
+    letter-spacing: 0.18em;
+  }
+
+  .rule {
+    @apply h-px w-10 bg-champagne-400;
+  }
+
+  /* Scroll-reveal: elements start hidden and animate in once observed */
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+      opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel-track {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .carousel-track > * {
+    scroll-snap-align: start;
+  }
+
+  .hero-text-shadow {
+    text-shadow: 0 2px 34px rgba(6, 13, 22, 0.45);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .animate-fade-up,
+  .animate-image-in,
+  .animate-overlay-in {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
