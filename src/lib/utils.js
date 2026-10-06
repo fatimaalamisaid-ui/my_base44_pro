@@ -3,24 +3,29 @@ export function cx(...parts) {
   return parts.filter(Boolean).join(' ')
 }
 
-/** 2350000 -> "$2.35 Million" */
-export function formatPrice(value) {
-  if (!Number.isFinite(value)) return 'Price on request'
-  if (value >= 1_000_000) {
-    const millions = Math.round((value / 1_000_000) * 100) / 100
-    return `$${millions} Million`
-  }
-  if (value >= 1_000) return `$${Math.round(value / 1_000)}K`
-  return `$${value}`
+const PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
+
+/** 1404 -> "۱۴۰۴" */
+export function toPersianDigits(value) {
+  return String(value ?? '').replace(/[0-9]/g, (digit) => PERSIAN_DIGITS[Number(digit)])
 }
 
-/** Compact price used inside filter controls: 2350000 -> "$2.35M" */
-export function formatPriceShort(value) {
-  return formatPrice(value).replace(' Million', 'M')
+/** 185000 -> "۱۸۵٬۰۰۰" */
+export function formatToman(value) {
+  const amount = Number(value)
+  if (!Number.isFinite(amount)) return ''
+  return toPersianDigits(amount.toLocaleString('en-US')).replace(/,/g, '٬')
 }
 
-export function formatNumber(value) {
-  return Number(value).toLocaleString('en-US')
+/** 185000 -> "۱۸۵٬۰۰۰ تومان" */
+export function priceLabel(value) {
+  const formatted = formatToman(value)
+  return formatted ? `${formatted} تومان` : ''
+}
+
+/** Persian ordinal-ish count label: "۳ آیتم" */
+export function countLabel(count, singular, plural) {
+  return `${toPersianDigits(count)} ${count === 1 ? singular : plural}`
 }
 
 export function slugify(value) {
@@ -29,14 +34,4 @@ export function slugify(value) {
     .trim()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '')
-}
-
-/** "Austin, Texas, USA" for cards and meta rows. */
-export function formatLocation(location) {
-  if (!location) return ''
-  return [location.city, location.state, location.country].filter(Boolean).join(', ')
-}
-
-export function pluralize(count, singular, plural) {
-  return `${count} ${count === 1 ? singular : plural}`
 }

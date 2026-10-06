@@ -6,47 +6,60 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    /* Persian copy needs a slightly looser rhythm than Latin */
+    line-height: 1.85;
   }
 
   body {
-    @apply bg-white font-sans text-navy-600 antialiased;
+    @apply bg-coffee-900 font-sans text-sand/85 antialiased;
+    overflow-x: hidden;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    @apply font-semibold tracking-tight text-navy-950;
+    @apply font-bold text-cream;
+    line-height: 1.45;
     text-wrap: balance;
   }
 
+  p {
+    text-wrap: pretty;
+  }
+
   ::selection {
-    @apply bg-champagne-300 text-navy-950;
+    @apply bg-gold/30 text-cream;
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-champagne-500 ring-offset-2 ring-offset-white;
+    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-coffee-900;
+  }
+
+  /* Persian numerals look better with proportional, lining figures */
+  [dir='rtl'] {
+    font-variant-numeric: normal;
   }
 }
 
 @layer components {
-  /* Small uppercase section label with the champagne accent */
+  /* Small gold eyebrow label */
   .label {
-    @apply text-[11px] font-semibold uppercase text-champagne-600;
-    letter-spacing: 0.18em;
+    @apply text-[11px] font-semibold text-gold sm:text-xs;
   }
 
+  /* Short gold rule that sits beside a label */
   .rule {
-    @apply h-px w-10 bg-champagne-400;
+    @apply h-px w-8 bg-gold/60 sm:w-10;
   }
 
-  /* Scroll-reveal: elements start hidden and animate in once observed */
+  /* Scroll-reveal: hidden until observed, then eased into place */
   .reveal {
     opacity: 0;
-    transform: translateY(26px);
+    transform: translateY(28px);
     transition:
-      opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: opacity, transform;
   }
 
@@ -64,23 +77,43 @@
     display: none;
   }
 
-  .carousel-track {
+  /* Horizontal snap rails (menu tabs on mobile, featured rail) */
+  .snap-rail {
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
   }
 
-  .carousel-track > * {
+  .snap-rail > * {
     scroll-snap-align: start;
   }
 
   .hero-text-shadow {
-    text-shadow: 0 2px 34px rgba(6, 13, 22, 0.45);
+    text-shadow: 0 2px 36px rgba(15, 8, 6, 0.6);
+  }
+
+  /* Thin gold divider that fades at both ends */
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(
+      to left,
+      rgba(216, 180, 122, 0) 0%,
+      rgba(216, 180, 122, 0.4) 50%,
+      rgba(216, 180, 122, 0) 100%
+    );
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Decorative map placeholder grid */
+  .map-grid {
+    background-image:
+      linear-gradient(rgba(245, 234, 214, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245, 234, 214, 0.06) 1px, transparent 1px);
+    background-size: 44px 44px;
   }
 }
 
@@ -96,8 +129,11 @@
   }
 
   .animate-fade-up,
+  .animate-fade-in,
+  .animate-scale-in,
   .animate-image-in,
-  .animate-overlay-in {
+  .animate-overlay-in,
+  .animate-toast-in {
     animation: none !important;
   }
 

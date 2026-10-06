@@ -1,24 +1,27 @@
 import Hero from '../sections/Hero.jsx'
-import WhoWeAre from '../sections/WhoWeAre.jsx'
-import FeaturedProperties from '../sections/FeaturedProperties.jsx'
-import ServicesSection from '../sections/ServicesSection.jsx'
-import WhyChoose from '../sections/WhyChoose.jsx'
-import TeamSection from '../sections/TeamSection.jsx'
-import CtaBand from '../sections/CtaBand.jsx'
-import { useDocumentTitle } from '../lib/hooks.js'
+import FeatureSection from '../sections/FeatureSection.jsx'
+import MenuSection from '../sections/MenuSection.jsx'
+import StorySection from '../sections/StorySection.jsx'
+import GallerySection from '../sections/GallerySection.jsx'
+import TestimonialsSection from '../sections/TestimonialsSection.jsx'
+import CtaSection from '../sections/CtaSection.jsx'
+import ContactSection from '../sections/ContactSection.jsx'
+import { pageSeo } from '../data/content.js'
+import { usePageMeta } from '../lib/seo.js'
 
 export default function Home() {
-  useDocumentTitle('Horizon Properties — Exceptional Homes & Investments')
+  usePageMeta(pageSeo.home)
 
   return (
     <>
       <Hero />
-      <WhoWeAre />
-      <FeaturedProperties />
-      <ServicesSection />
-      <WhyChoose />
-      <TeamSection />
-      <CtaBand />
+      <FeatureSection />
+      <MenuSection />
+      <StorySection />
+      <GallerySection preview />
+      <TestimonialsSection />
+      <CtaSection />
+      <ContactSection />
     </>
   )
 }

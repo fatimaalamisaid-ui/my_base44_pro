@@ -14,7 +14,7 @@ export function useScrolled(threshold = 16) {
   return scrolled
 }
 
-/** Lock page scrolling while overlays (menus, galleries) are open. */
+/** Lock page scrolling while overlays (menus, modals, lightboxes) are open. */
 export function useLockBodyScroll(locked) {
   useEffect(() => {
     if (!locked) return undefined
@@ -45,11 +45,7 @@ export function useEscape(active, handler) {
 export function useDocumentTitle(title) {
   useEffect(() => {
     if (!title) return undefined
-    const previous = document.title
     document.title = title
-    return () => {
-      document.title = previous
-    }
   }, [title])
 }
 
@@ -68,4 +64,10 @@ export function useMediaQuery(query) {
   }, [query])
 
   return matches
+}
+
+/** Simple boolean state helper used for forms and async actions. */
+export function useToggle(initial = false) {
+  const [value, setValue] = useState(initial)
+  return [value, () => setValue((v) => !v), setValue]
 }

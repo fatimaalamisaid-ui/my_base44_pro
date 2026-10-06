@@ -1,50 +1,53 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-
-const STORAGE_KEY = 'horizon:favourites'
-const INQUIRY_KEY = 'horizon:inquiries'
-
-function readIds() {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY)
-    const parsed = raw ? JSON.parse(raw) : []
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
-}
-
 /**
- * Saved-property state, persisted to localStorage so a favourite survives
- * reloads. Swap the read/write helpers for API calls to connect a real backend.
+ * Client-side persistence seam.
+ *
+ * The site ships without a server: orders and contact messages are kept in
+ * localStorage so every flow is real and works offline. When a CMS or database
+ * is connected, these functions are the only thing that has to change — the
+ * components around them already treat them as async-safe.
  */
-export function useFavourites() {
-  const [ids, setIds] = useState(() => (typeof window === 'undefined' ? [] : readIds()))
 
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(ids))
-    } catch {
-      /* storage unavailable — favourites stay in memory for this session */
-    }
-  }, [ids])
-
-  const toggle = useCallback((id) => {
-    setIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]))
-  }, [])
-
-  const isFavourite = useCallback((id) => ids.includes(id), [ids])
-
-  return useMemo(() => ({ ids, count: ids.length, toggle, isFavourite }), [ids, toggle, isFavourite])
+const KEYS = {
+  orders: 'kafevdaneh:orders',
+  messages: 'kafevdaneh:messages',
 }
 
-/** Persist a lead captured by a contact / viewing form. Stand-in for an API call. */
-export function saveInquiry(inquiry) {
+function read(key, fallback) {
   try {
-    const raw = window.localStorage.getItem(INQUIRY_KEY)
-    const parsed = raw ? JSON.parse(raw) : []
-    const list = Array.isArray(parsed) ? parsed : []
-    window.localStorage.setItem(INQUIRY_KEY, JSON.stringify([...list, { ...inquiry, createdAt: new Date().toISOString() }]))
+    const raw = window.localStorage.getItem(key)
+    return raw ? JSON.parse(raw) : fallback
   } catch {
-    /* non-blocking: the confirmation still shows */
+    return fallback
   }
+}
+
+function write(key, value) {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value))
+  } catch {
+    /* storage unavailable (private mode) — the UI stays usable */
+  }
+}
+
+export function getOrders() {
+  return read(KEYS.orders, [])
+}
+
+/** Persist one order line and return the new order count. */
+export function saveOrder(order) {
+  const orders = getOrders()
+  orders.push({ ...order, createdAt: new Date().toISOString() })
+  write(KEYS.orders, orders)
+  return orders.length
+}
+
+export function getMessages() {
+  return read(KEYS.messages, [])
+}
+
+export function saveMessage(message) {
+  const messages = getMessages()
+  messages.push({ ...message, createdAt: new Date().toISOString() })
+  write(KEYS.messages, messages)
+  return messages.length
 }

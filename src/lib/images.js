@@ -1,4 +1,10 @@
-const PHOTO_BASE = 'https://images.unsplash.com/photo-'
+/**
+ * Unsplash CDN helpers.
+ *
+ * Photo ids are stored in /src/data with their `photo-…` prefix, so the base
+ * URL must not add another one.
+ */
+const PHOTO_BASE = 'https://images.unsplash.com/'
 
 const DEFAULT_WIDTHS = [640, 960, 1440, 1920]
 

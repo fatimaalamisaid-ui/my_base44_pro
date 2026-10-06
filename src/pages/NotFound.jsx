@@ -1,29 +1,28 @@
-import Container from '../components/ui/Container.jsx'
 import Button from '../components/ui/Button.jsx'
-import { useDocumentTitle } from '../lib/hooks.js'
+import Container from '../components/ui/Container.jsx'
+import { LogoMark } from '../components/ui/Icons.jsx'
 
 export default function NotFound() {
-  useDocumentTitle('Page not found — Horizon Properties')
-
   return (
-    <section className="flex min-h-[70vh] items-center bg-white pb-20 pt-[132px]">
+    <section className="relative isolate flex min-h-[80svh] items-center overflow-hidden bg-coffee-950 pt-32">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(70%_60%_at_50%_20%,rgba(216,180,122,0.12),transparent_65%)]" />
+
       <Container className="text-center">
-        <p className="text-[11px] font-semibold uppercase text-champagne-600" style={{ letterSpacing: '0.18em' }}>
-          404
-        </p>
-        <h1 className="mx-auto mt-5 max-w-2xl text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.1] tracking-tight text-navy-950">
-          We could not find that page
+        <LogoMark className="mx-auto h-14 w-14 text-gold/70" />
+        <p className="mt-8 text-sm font-semibold text-gold">خطای ۴۰۴</p>
+        <h1 className="mt-5 text-[clamp(1.8rem,4vw,2.8rem)] font-bold">
+          این صفحه در منوی ما نیست
         </h1>
-        <p className="mx-auto mt-5 max-w-md text-[15px] leading-relaxed text-navy-500">
-          The link may be out of date. Try the current portfolio, or get in touch and we will point you in
-          the right direction.
+        <p className="mx-auto mt-4 max-w-md leading-relaxed text-sand/65">
+          نشانی‌ای که دنبالش بودید پیدا نشد. می‌توانید به خانه برگردید یا نگاهی به منوی کافه بیندازید.
         </p>
-        <div className="mt-9 flex flex-wrap justify-center gap-3">
-          <Button to="/properties" variant="primary" size="lg">
-            Browse properties
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <Button to="/" variant="primary" size="lg">
+            بازگشت به خانه
           </Button>
-          <Button to="/" variant="outline" size="lg">
-            Back to home
+          <Button to="/menu" variant="outline" size="lg">
+            مشاهده منو
           </Button>
         </div>
       </Container>
