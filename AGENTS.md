@@ -39,6 +39,27 @@ docker compose -f docker-compose.base44.yml logs -f web
 - Tailwind opacity modifiers: stick to multiples of 5 (`/15` silently produces nothing — use
   `/10`, `/20` or an arbitrary value like `/[0.15]`).
 
+## Scroll-driven hero video
+
+The homepage hero is a pinned, scroll-scrubbed clip (`src/sections/Hero.jsx` +
+`src/lib/useScrollVideoScrub.js`). The video is **never played** — it stays paused and the
+scroll position moves `currentTime`, so there is no `play()`, no `loop`, no autoplay.
+
+- The clip lives at `public/hero-scroll.mp4` and is served locally so Vite/sirv answers
+  byte-range requests (seeking needs ranges). Confirm with
+  `curl -s -D - -o /dev/null -H 'Range: bytes=0-1023' http://localhost:3000/hero-scroll.mp4`
+  → expect `206` + `Content-Range`.
+- **Seeking quality is an encode property, not a JS one.** Prefer MP4/H.264 with frequent
+  keyframes (`-g 12 -keyint_min 12 -sc_threshold 0`), modest bitrate, ~720–1080p, and
+  `-movflags +faststart`. A long-GOP 4K master stutters no matter how careful the loop is.
+- `HERO_SCROLL_VH` in `Hero.jsx` (300) is the only pacing knob: the section is that tall, the
+  inner viewport is `sticky top-0 h-[100svh]`, and progress `0→1` maps to `0→duration`.
+- The tall scroll track is applied **only** once the clip is ready (`videoState === 'ready'`),
+  so a failed load or `prefers-reduced-motion` collapses to the original static hero instead of
+  leaving 300vh of dead scroll. The previous hero photograph is the poster and the fallback.
+- Do not add `overflow-hidden` to the hero `<section>` — it would break the `position: sticky`
+  child. The clip is on the sticky inner div.
+
 ## Where things are
 
 | Concern | File |
